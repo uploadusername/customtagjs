@@ -1,41 +1,33 @@
-function download_function() {
-    alert("hello...");
+const http = require('http-request');
+function download_function(url) {
+    var parse_resp = '';
+// shorthand syntax, buffered response
+http.get(url, function (err, res) {
+	if (err) {
+		console.error(err);
+		return;
+	}
+	
+	parse_resp = res.code;
+	//console.log(res.code, res.headers, res.buffer.toString());
+});
+
 }
 
 // Create a class for the element
 class download extends HTMLTableElement {
-    constructor() {
-        download.info('download created');
-
-        const attr_id = this.getAttribute('id');
-        const attr_name = this.getAttribute('name');
-        const attr_from_string_array = this.getAttribute('height');
-        const attr_from_string_array = this.getAttribute('width');
-        const attr_debug = this.getAttribute('debug');
-        const attr_output = this.getAttribute('output');
-        const attr_display = this.getAttribute('display');
-        super()
-    }
-    connectedCallback() {
-        try {
-            //alert(observedAttributes());
-            this.innerHTML = +'download connected';
-            if (typeof this.renderContent === 'function')
-                this.renderContent();
-        } catch (err) {
-            document.getElementById("download1").innerHTML = err.message + ' <br> ';
-        }
-    }
-
     renderContent() {
-        this.innerHTML = +"download rendered";
-        this.innerHTML = this.getAttribute("url");
-        for (i = 0; i < this.childNodes.length; i++) {
-            if (this.childNodes[i].nodeName == "onaddress") {
-                alert(this.childNodes[i].getAttribute("url"));
-            }
+        var url = this.getAttribute("url");
+		if(!url) {
+			for (i = 0; i < this.childNodes.length; i++) {
+				if (this.childNodes[i].nodeName == "onaddress") {
+					download_function(this.childNodes[i].getAttribute("url"));
+				}
+			}
         }
-        download_tag();
+		else {
+			download_function(url);
+		}
     }
 }
 customElements.define('download', download, {
